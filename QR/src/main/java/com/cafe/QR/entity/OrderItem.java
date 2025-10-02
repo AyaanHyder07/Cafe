@@ -43,7 +43,6 @@ public class OrderItem {
     @Column(name = "price_at_order", nullable = false, precision = 10, scale = 2)
     private BigDecimal priceAtOrder;
 
-    private String notes;
 
 	public Long getOrderItemId() {
 		return orderItemId;
@@ -85,16 +84,6 @@ public class OrderItem {
 		this.priceAtOrder = priceAtOrder;
 	}
 
-	public String getNotes() {
-		return notes;
-	}
-
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
-    
-    
-    
     
     
 }

@@ -78,7 +78,6 @@ public class OrderService {
             orderItem.setOrder(newOrder);
             orderItem.setMenuItem(menuItem);
             orderItem.setQuantity(itemDTO.getQuantity());
-            orderItem.setNotes(itemDTO.getNotes());
             
             // Business Rule: Capture the price at the time of order
             orderItem.setPriceAtOrder(menuItem.getPrice()); 

@@ -20,6 +20,17 @@ public class MenuItemDTO {
     private BigDecimal price;
 
     private boolean isAvailable;
+    
+    @NotBlank(message = "Category cannot be blank")
+    private String category;
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
 
 	public Long getItemId() {
 		return itemId;

@@ -24,8 +24,19 @@ public class MenuItem {
     private String name;
 
     private String description;
+    
+    @Column(nullable = false)
+    private String category;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	@Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
     @Column(name = "is_available", nullable = false)

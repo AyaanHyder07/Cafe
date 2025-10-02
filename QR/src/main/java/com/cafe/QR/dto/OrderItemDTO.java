@@ -17,7 +17,6 @@ public class OrderItemDTO {
     
     private BigDecimal priceAtOrder;
     
-    private String notes;
 
 	public Long getOrderItemId() {
 		return orderItemId;
@@ -51,14 +50,4 @@ public class OrderItemDTO {
 		this.priceAtOrder = priceAtOrder;
 	}
 
-	public String getNotes() {
-		return notes;
-	}
-
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
-
-    
-    
 }

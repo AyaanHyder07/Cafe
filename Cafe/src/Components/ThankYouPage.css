@@ -1,0 +1,79 @@
+/* src/ThankYouPage.css */
+:root {
+  --accent-color-primary: #A34E2F;
+  --bg-color-light: #F8F4E3;
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Montserrat', sans-serif;
+}
+
+.thank-you-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--bg-color-light);
+  padding: 20px;
+}
+
+.thank-you-card {
+  background-color: white;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.checkmark-icon {
+  width: 80px;
+  height: 80px;
+  background-color: #28a745;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  margin: 0 auto 20px;
+}
+
+.thank-you-title {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  color: var(--accent-color-primary);
+  margin-bottom: 10px;
+}
+
+.thank-you-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: #7B7B7B;
+  margin-bottom: 30px;
+}
+
+.order-confirmation {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 15px;
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+}
+
+.new-order-button {
+  display: inline-block;
+  background-color: var(--accent-color-primary);
+  color: white;
+  padding: 15px 35px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.new-order-button:hover {
+  background-color: #8D3F25;
+  transform: translateY(-3px);
+}

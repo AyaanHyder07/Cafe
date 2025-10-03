@@ -1,6 +1,7 @@
 package com.cafe.QR.service;
 
 import com.cafe.QR.dto.OrderDTO;
+import org.springframework.data.domain.Sort;
 import com.cafe.QR.dto.OrderItemDTO;
 import com.cafe.QR.entity.*;
 import com.cafe.QR.repository.*;
@@ -99,10 +100,11 @@ public class OrderService {
     }
     
     /**
-     * Retrieves all orders. In a real application, this would have pagination.
-     * @return A list of all orders.
+     * Retrieves all orders, sorted by the most recent first.
+     * @return A sorted list of all orders.
      */
     public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+        // CRITICAL CHANGE: Sort orders by creation date in descending order.
+        return orderRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 }

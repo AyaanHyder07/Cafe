@@ -1,4 +1,4 @@
-package com.cafe.QR.config;
+package com.cafe.QR.config; // Assuming this package name
 
 import com.cafe.QR.security.JwtRequestFilter;
 import com.cafe.QR.service.AdminUserDetailsService;
@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity; // <-- IMPORT THIS
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity // <-- CRITICAL CHANGE: ENABLES @PreAuthorize ANNOTATIONS
 public class SecurityConfig {
 
     @Autowired
@@ -41,17 +43,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable() // Disable CSRF for stateless APIs
+        http.csrf().disable()
             .authorizeHttpRequests(authz -> authz
-                // Allow public access to these endpoints
-                .requestMatchers("/api/admin/login", "/api/customer/**", "/api/menu/**").permitAll() 
-                // All other requests require authentication
+                // These are public and do not require a token
+                .requestMatchers("/api/admin/login", "/api/customer/**", "/api/menu/available").permitAll() 
+                // Any other request must be authenticated
                 .anyRequest().authenticated() 
             )
-            // Use stateless session management; session won't be used to store user's state.
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Add our custom JWT filter before the standard authentication filter
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

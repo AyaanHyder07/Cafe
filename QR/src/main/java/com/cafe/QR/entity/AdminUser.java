@@ -16,7 +16,7 @@ public class AdminUser {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash; // Store the hashed password, not the raw password
 
     @Column(nullable = false)

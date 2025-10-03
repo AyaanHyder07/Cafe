@@ -1,0 +1,93 @@
+/* src/components/admin/AdminLayout.css */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f4f7fa;
+}
+
+.admin-sidebar {
+    width: 260px;
+    background-color: #1a2233;
+    color: #aeb9e1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #2a3550;
+}
+
+.sidebar-logo {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3.5rem;
+    color: #fff;
+    margin: 0;
+}
+
+.sidebar-header span {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.admin-nav {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+.nav-link {
+    color: #aeb9e1;
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    background-color: #2a3550;
+    color: #fff;
+}
+
+.nav-link.active {
+    background-color: #E07A5F; /* Accent color */
+    color: #fff;
+}
+
+.nav-divider {
+    border: none;
+    border-top: 1px solid #2a3550;
+    margin: 15px 0;
+}
+
+.owner-link {
+    border-left: 3px solid #D4AF37; /* Gold accent for owner links */
+}
+
+.logout-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #E07A5F;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.logout-button:hover {
+    background-color: #D46A4D;
+}
+
+.admin-main-content {
+    flex-grow: 1;
+    padding: 40px;
+    overflow-y: auto;
+}

@@ -1,0 +1,83 @@
+/* src/components/admin/AdminDashboard.css */
+.admin-page {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.admin-page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: #1a2233;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #E07A5F;
+    padding-bottom: 10px;
+}
+
+.order-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.order-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #1a2233;
+    color: white;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.order-card-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.order-card-body {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.order-card-body p {
+    margin: 0 0 10px;
+    color: #555;
+}
+
+.order-card-body p strong {
+    color: #333;
+}
+
+.order-card-body ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.order-card-body li {
+    padding: 5px 0;
+}
+
+.order-card-footer {
+    padding: 15px 20px;
+    background-color: #f4f7fa;
+    text-align: right;
+    font-size: 1.3rem;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}

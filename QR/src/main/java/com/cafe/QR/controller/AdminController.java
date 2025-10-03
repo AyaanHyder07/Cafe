@@ -15,27 +15,17 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    /**
-     * Public endpoint for an admin/staff/owner to log in.
-     * @param adminUserDTO Contains raw username and password.
-     * @return ResponseEntity containing the JWT and the user's role on success.
-     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AdminUserDTO adminUserDTO) {
         try {
             AuthenticationResponseDTO response = adminService.loginAdmin(adminUserDTO);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            // This will now only be triggered by genuinely bad credentials
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
 
-    /**
-     * SECURED endpoint to register a new admin or staff user.
-     * Only accessible by an already authenticated user with the 'OWNER' role.
-     * @param adminUserDTO Contains details for the new user.
-     * @return A success or failure message.
-     */
     @PostMapping("/register")
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<?> registerNewAdmin(@RequestBody AdminUserDTO adminUserDTO) {

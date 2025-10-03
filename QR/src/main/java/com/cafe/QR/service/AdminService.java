@@ -1,15 +1,13 @@
 package com.cafe.QR.service;
 
 import com.cafe.QR.dto.AdminUserDTO;
-import com.cafe.QR.dto.AuthenticationResponseDTO; // <-- IMPORT THE NEW DTO
+import com.cafe.QR.dto.AuthenticationResponseDTO;
 import com.cafe.QR.entity.AdminUser;
 import com.cafe.QR.repository.AdminUserRepository;
 import com.cafe.QR.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,35 +15,39 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
     private AdminUserDetailsService adminUserDetailsService;
+    
     @Autowired
     private AdminUserRepository adminUserRepository;
+
     @Autowired
     private JwtUtil jwtUtil;
+    
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // CRITICAL CHANGE: The method now returns an object with the token AND role
     public AuthenticationResponseDTO loginAdmin(AdminUserDTO adminUserDTO) throws Exception {
+        
+        final UserDetails userDetails;
         try {
-            authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(adminUserDTO.getUsername(), adminUserDTO.getPassword())
-            );
-        } catch (BadCredentialsException e) {
+            userDetails = adminUserDetailsService.loadUserByUsername(adminUserDTO.getUsername());
+        } catch (UsernameNotFoundException e) {
             throw new Exception("Incorrect username or password", e);
         }
-
-        final UserDetails userDetails = adminUserDetailsService.loadUserByUsername(adminUserDTO.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails);
         
-        // Extract the role from the userDetails object
+        boolean passwordsMatch = passwordEncoder.matches(adminUserDTO.getPassword(), userDetails.getPassword());
+        
+        if (!passwordsMatch) {
+            throw new Exception("Incorrect username or password");
+        }
+        
+        final String jwt = jwtUtil.generateToken(userDetails);
         final String role = userDetails.getAuthorities().stream()
                                   .findFirst()
-                                  .get().getAuthority().replace("ROLE_", "");
+                                  .orElseThrow(() -> new RuntimeException("User has no roles"))
+                                  .getAuthority().replace("ROLE_", "");
 
-        return new AuthenticationResponseDTO(jwt, role); // <-- Return the new object
+        return new AuthenticationResponseDTO(jwt, role);
     }
     
     public AdminUser registerAdmin(AdminUserDTO adminUserDTO) {
@@ -56,7 +58,7 @@ public class AdminService {
         AdminUser newAdmin = new AdminUser();
         newAdmin.setUsername(adminUserDTO.getUsername());
         newAdmin.setPasswordHash(passwordEncoder.encode(adminUserDTO.getPassword()));
-        newAdmin.setRole(adminUserDTO.getRole().toUpperCase()); // Store roles in uppercase
+        newAdmin.setRole(adminUserDTO.getRole().toUpperCase());
         
         return adminUserRepository.save(newAdmin);
     }

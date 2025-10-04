@@ -1,20 +1,22 @@
 package com.cafe.QR.dto;
 
 public class AuthenticationResponseDTO {
+    private String message;
+    private String role;
 
-    private final String jwt;
-    private final String role;
-
-    public AuthenticationResponseDTO(String jwt, String role) {
-        this.jwt = jwt;
-        this.role = role;
+    public String getMessage() {
+        return message;
     }
 
-    public String getJwt() {
-        return jwt;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getRole() {
         return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

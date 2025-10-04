@@ -6,8 +6,10 @@ import com.cafe.QR.entity.AdminUser;
 import com.cafe.QR.repository.AdminUserRepository;
 import com.cafe.QR.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,41 +17,37 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
     @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
     private AdminUserDetailsService adminUserDetailsService;
     
+
+
+    @Autowired
+    private JwtUtil jwtUtil;
     @Autowired
     private AdminUserRepository adminUserRepository;
 
     @Autowired
-    private JwtUtil jwtUtil;
-    
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public AuthenticationResponseDTO loginAdmin(AdminUserDTO adminUserDTO) throws Exception {
-        
-        final UserDetails userDetails;
-        try {
-            userDetails = adminUserDetailsService.loadUserByUsername(adminUserDTO.getUsername());
-        } catch (UsernameNotFoundException e) {
-            throw new Exception("Incorrect username or password", e);
-        }
-        
-        boolean passwordsMatch = passwordEncoder.matches(adminUserDTO.getPassword(), userDetails.getPassword());
-        
-        if (!passwordsMatch) {
-            throw new Exception("Incorrect username or password");
-        }
-        
-        final String jwt = jwtUtil.generateToken(userDetails);
-        final String role = userDetails.getAuthorities().stream()
-                                  .findFirst()
-                                  .orElseThrow(() -> new RuntimeException("User has no roles"))
-                                  .getAuthority().replace("ROLE_", "");
+    public AuthenticationResponseDTO loginAdmin(AdminUserDTO adminUserDTO) {
+        AdminUser admin = adminUserRepository.findByUsername(adminUserDTO.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return new AuthenticationResponseDTO(jwt, role);
+        if (!passwordEncoder.matches(adminUserDTO.getPassword(), admin.getPasswordHash())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        AuthenticationResponseDTO response = new AuthenticationResponseDTO();
+        response.setMessage("Login successful");
+        response.setRole(admin.getRole());
+
+        return response;  // <-- Don't forget this!
     }
-    
+
+
     public AdminUser registerAdmin(AdminUserDTO adminUserDTO) {
         if (adminUserRepository.findByUsername(adminUserDTO.getUsername()).isPresent()) {
             throw new RuntimeException("Username is already taken!");

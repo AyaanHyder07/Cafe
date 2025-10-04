@@ -17,8 +17,6 @@ public class AdminUserDTO {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password; 
 
-    @NotBlank(message = "Role is required")
-    private String role;
 
     private LocalDateTime createdAt;
     
@@ -27,10 +25,9 @@ public class AdminUserDTO {
     public AdminUserDTO() {
     }
 
-    public AdminUserDTO(Long adminId, String username, String role, LocalDateTime createdAt) {
+    public AdminUserDTO(Long adminId, String username, LocalDateTime createdAt) {
         this.adminId = adminId;
         this.username = username;
-        this.role = role;
         this.createdAt = createdAt;
     }
 
@@ -59,13 +56,6 @@ public class AdminUserDTO {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;

@@ -23,12 +23,13 @@ public class AdminUserDetailsService implements UserDetailsService {
         AdminUser adminUser = adminUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Admin user not found: " + username));
         
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + adminUser.getRole());
+        // FINAL CHANGE: Hardcode the single, mandatory permission for all admins
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_ADMIN");
 
         return new User(
             adminUser.getUsername(), 
             adminUser.getPasswordHash(), 
-            Collections.singletonList(authority)
+            Collections.singletonList(authority) 
         );
     }
 }

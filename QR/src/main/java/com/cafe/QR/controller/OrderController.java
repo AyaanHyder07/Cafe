@@ -18,10 +18,7 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
-
-    /**
-     * Public endpoint for customers to place an order.
-     */
+    
     @PostMapping("/place")
     public ResponseEntity<?> placeOrder(@RequestBody OrderDTO orderDTO) {
         try {
@@ -33,11 +30,8 @@ public class OrderController {
         }
     }
 
-    /**
-     * SECURED endpoint for admins (staff/owner) to view all orders for the dashboard.
-     */
+
     @GetMapping
-    @PreAuthorize("hasAnyRole('STAFF', 'OWNER')")
     public ResponseEntity<List<Order>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }

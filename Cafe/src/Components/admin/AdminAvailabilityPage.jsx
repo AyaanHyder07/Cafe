@@ -1,29 +1,27 @@
-// src/components/admin/AdminAvailabilityPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-// import './AdminAvailabilityPage.css';
 import './AdminShared.css';
 
 const AdminAvailabilityPage = () => {
     const [menuItems, setMenuItems] = useState([]);
-    const { token } = useAuth();
+    const { isAuthenticated } = useAuth();
 
     useEffect(() => {
         const fetchAllItems = async () => {
-            if (!token) return;
+            if (!isAuthenticated) return;
             const response = await fetch('/api/menu/all', {
-                headers: { 'Authorization': `Bearer ${token}` }
+                credentials: 'include' // Sends the session cookie
             });
             const data = await response.json();
             setMenuItems(data);
         };
         fetchAllItems();
-    }, [token]);
+    }, [isAuthenticated]);
 
     const handleToggle = async (itemId) => {
         const response = await fetch(`/api/menu/${itemId}/availability`, {
             method: 'PUT',
-            headers: { 'Authorization': `Bearer ${token}` }
+            credentials: 'include' // Sends the session cookie
         });
         if (response.ok) {
             const updatedItem = await response.json();

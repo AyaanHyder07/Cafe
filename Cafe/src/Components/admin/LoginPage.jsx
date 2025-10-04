@@ -7,26 +7,29 @@ const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { login } = useAuth();
+    const { login } = useAuth(); // Gets the login function from context
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // This is the corrected position
+        e.preventDefault();
         setError('');
         try {
             const response = await fetch('/api/admin/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username, password }),
+                credentials: 'include' // CRITICAL: Sends session cookie to be created/validated
             });
 
             if (!response.ok) {
                 throw new Error('Invalid credentials');
             }
 
-            const { jwt, role } = await response.json();
-            login(jwt, role);
+            // Backend success: The session cookie is set by the backend.
+            await response.json(); 
+            login(); // Update frontend state to authenticated
             navigate('/admin/dashboard');
+
         } catch (err) {
             setError('Login failed. Please check your username and password.');
         }
@@ -40,23 +43,11 @@ const LoginPage = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
                         <label htmlFor="username">Username</label>
-                        <input
-                            id="username"
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
+                        <input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
                     </div>
                     <div className="input-group">
                         <label htmlFor="password">Password</label>
-                        <input
-                            id="password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
+                        <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                     </div>
                     {error && <p className="error-message">{error}</p>}
                     <button type="submit" className="login-button">Login</button>

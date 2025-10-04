@@ -1,43 +1,41 @@
-// src/components/admin/AdminDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
     const [orders, setOrders] = useState([]);
-    const [isLoading, setIsLoading] = useState(true); 
-    const [error, setError] = useState(null); 
-    const { token } = useAuth();
-
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { isAuthenticated } = useAuth();
 
     useEffect(() => {
         const fetchOrders = async () => {
-            setIsLoading(true); // Start loading
+            if (!isAuthenticated) return;
             setError(null);
             try {
-                const response = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` }});
-                if (!response.ok) throw new Error('Failed to fetch orders.');
+                const response = await fetch('/api/orders', {
+                    credentials: 'include' // Correct way to send session cookie
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch orders. You may not have permission.');
+                }
                 const data = await response.json();
                 setOrders(data);
-            } catch (err) {
-                setError(err.message); // Set error message
+            } catch (error) {
+                setError(error.message);
             } finally {
-                setIsLoading(false); // Stop loading
+                setIsLoading(false);
             }
         };
 
         fetchOrders();
-        const intervalId = setInterval(fetchOrders, 20000); // Poll every 20 seconds
+        // Optional: Polling to refresh orders
+        const intervalId = setInterval(fetchOrders, 30000);
         return () => clearInterval(intervalId);
-    }, [token]);
+    }, [isAuthenticated]);
 
-    const formatDateTime = (dateTimeString) => {
-        const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-        return new Date(dateTimeString).toLocaleDateString('en-US', options);
-    };
+    // ... (rest of the component JSX is unchanged)
 
-    if (isLoading) return <div>Loading orders...</div>; 
-    if (error) return <div>Error: {error}</div>; 
 
     return (
         <div className="admin-page">
@@ -65,7 +63,7 @@ const AdminDashboard = () => {
                                 </ul>
                             </div>
                             <div className="order-card-footer">
-                                <strong>Total: ${order.totalAmount.toFixed(2)}</strong>
+                                <strong>Total: ₹{order.totalAmount.toFixed(2)}</strong>
                             </div>
                         </div>
                     ))
